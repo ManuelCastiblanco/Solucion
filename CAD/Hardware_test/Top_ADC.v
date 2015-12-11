@@ -9,41 +9,59 @@ module Top_ADC(
 	 input			data5,
 	 input 			data6,
 	 input			data7,
-	
     input		   CLK,
 	 input 			OE_R,
 	 input 			init,
-	 //cinput			datain,
+
 	 output        CLK1,
-    output	[2:0] add,
 	 output 			ALE,
     output 			START, 
 	 output 			add0,
 	 output			add1,
 	 output			add2,
-	 output	reg	[7:0]	r1,
+	 output r1a,
+	 output r1b,
+	 output r1c,
+	 output r1d,
+	 output r1e,
+	 output r1f,
+	 output r1g,
+	 output r1h,
+	 // output	reg	[7:0]	r1,
 	 output	reg	[7:0]	r2,
 	 output	reg	[7:0]	r3,
 	 output	reg	[7:0]	r4,
-	 output	reg		done
+	 output	reg done
     );
 	 
-	 wire OE;
 	 wire[7:0] data;
+	 wire [2:0] add;
+	 wire	[7:0]	datain;
 	 reg [2:0] countA, countD;
+	 reg	[7:0]	r1;
 	 
-	 assign data[0]=data0;
-	 assign data[1]=data1;
-	 assign data[2]=data2;
-	 assign data[3]=data3;
-	 assign data[4]=data4;
-	 assign data[5]=data5;
-	 assign data[6]=data6;
-	 assign data[7]=data7;
+	 assign datain[0]=data0;
+	 assign datain[1]=data1;
+	 assign datain[2]=data2;
+	 assign datain[3]=data3;
+	 assign datain[4]=data4;
+	 assign datain[5]=data5;
+	 assign datain[6]=data6;
+	 assign datain[7]=data7;
 	 
-	 assign add[0]=add0;
-	 assign add[1]=add1;
-	 assign add[2]=add2;
+//	 assign r1[0] = r1a;
+//	 assign r1[1] = r1b;
+//	 assign r1[2] = r1c;
+//	 assign r1[3] = r1d;
+//	 assign r1[4] = r1e;
+//	 assign r1[5] = r1f;
+//	 assign r1[6] = r1g;
+//	 assign r1[7] = r1h;
+	 
+	 
+	 assign add0 =add[0];
+	 assign add1 =add[1];
+	 assign add2 =add[2];
 	 
 	 
 		
@@ -110,9 +128,9 @@ module Top_ADC(
 			done = 1;
 			countA = 0;
 		end			
-	end
+end
 	
-	always @(posedge CLK) begin
+	always @(posedge CLK1) begin
 		
 		if (done == 1)	begin
 			countD = countD + 1;
@@ -128,29 +146,13 @@ module Top_ADC(
     .add(add), 
     .ALE(ALE), 
     .START(START), 
-    .dataout(dataout), 
+    .dataout(data), 
     .init(init), 
     .datain(datain), 
-    .CLK(CLK), 
+    .CLK(CLK),
+	 .CLK1(CLK1),
     .OE_R(OE_R)
     );
 	 
-reg [7:0] count;  // clock divider counter
-
-reg CLK1;
-
-always @ (posedge CLK)
-
-  begin
-
-    if (count==8'b10100000)  // divide by 160
-
-       count <= 8'b00000000;  // reset to 0
-
-    else count <= count+1;  // increment counter
-
-    CLK1  <=  (count == 8'b00000000);  // counter decoded, single cycle pulse is generated
-
-  end
   
 endmodule 
