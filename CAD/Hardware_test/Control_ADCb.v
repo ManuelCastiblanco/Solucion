@@ -5,6 +5,7 @@ module Control_ADCb(
     output 	reg			ALE,
     output 	reg			START,
 	 output 	reg	[7:0]	dataout,
+	 output 					CLK1,
 	 input 					init,
     input 			[7:0]	datain,
     input 					CLK,
@@ -17,7 +18,7 @@ module Control_ADCb(
 	localparam Run 		= 3;
 	localparam Receive 	= 4;
 
-	wire OE;
+//	wire OE;
 	wire [2:0] add_o;
 	
 	reg [3:0] stateS, stateA;	
@@ -38,7 +39,7 @@ module Control_ADCb(
 		add = add_o;
 	end
 
-	always @(posedge CLK) begin
+	always @(posedge CLK1) begin
 		stateA = stateS;
 
 		case(stateA)
@@ -73,7 +74,7 @@ module Control_ADCb(
 					if (add == 3) begin
 						stateS = Iddle;
 					end
-					if (OE == 1)begin
+					if (OE_R == 1)begin
 						stateS = LoadAdd;
 						dataout = datain;
 					end
@@ -90,7 +91,8 @@ module Control_ADCb(
 	end
 AddressModule instance_name (
     .add_o(add_o), 
-    .CLK(CLK), 
+    .CLK(CLK),
+	 .CLK1(CLK1),
     .OE_R(OE_R), 
     .init(init)
     );	
